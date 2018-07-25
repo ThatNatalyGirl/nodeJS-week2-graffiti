@@ -2,7 +2,6 @@
 // upon page load, ask the server for all the tags it has saved, 
 // and put them on the screen
 var body = document.querySelector(".wall")
-var pTag = document.createElement('p');
 
 var randomlyPlace = function(el){
 	el.style.position = "absolute";
@@ -11,30 +10,23 @@ var randomlyPlace = function(el){
 };
 
 
-function displayTag(currentTag){
+function displayTag(currentTag, currentColor){
+		var pTag = document.createElement('p');
 		pTag.innerHTML = currentTag
 		pTag.classList.add('tag')
 		body.appendChild(pTag)
 		randomlyPlace(pTag)
-}
-
-function displayColor(colorSelected){
-	pTag.style.color = colorSelected
+		pTag.style.color = currentColor
 }
 
 //now we'r reaching into the host that is saving our name and color
 axios.get('http://localhost:1235/tag')
 	.then(function (response) {
-		console.log(response.data)
+		// console.log(response.data)
 		var tagArray = response.data
 		for (var i = 0; i < tagArray.length; i++) {
-			displayTag(tagArray[i].word)
-			displayColor(tagArray[i].color)
-		}
-
-		for (var i = 0; i < Things.length; i++) {
-			Things[i]
-		}
+			console.log(tagArray[i])
+			displayTag(tagArray[i].word, tagArray[i].color)
 		}
 	})
 	.catch(function (error) {
