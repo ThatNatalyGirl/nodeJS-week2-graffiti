@@ -22,7 +22,7 @@ app.get('/', function(req, res){
 	res.send('Welcome to the Tag World. Add tag to the URL :D')
 })
 
-//so you can do /whatever and then when you go there you get the response given here in this section! Woah
+//so you can do whatever and then when you go there you get the response given here in this section! Woah
 //it can do regex too!
 //if you put a ":" in it, it becomes a variable!
 	//-so the person can send stuffs 
@@ -42,15 +42,15 @@ app.get('/', function(req, res){
 
 app.post('/tag', function(req, res){
 	//req.body.tag is using the body parser going through the giant req and then finding the tag property
+	res.send('How you add tags')
+	//this is looking into the req and since we sent it in the main js we're just pulling it out by finding it's name
+	console.log(req.body.color)
 	console.log(req.body.tag)
-	console.log("tags.array:", tags)
-	console.log("object", req)
-	res.send('This is how you add tags')
 	var tagInfo = {
-		word: req.body.tag
-		// color: req.body.
+		word: req.body.tag,
+		color: req.body.color
 	}
-	tags.push(req.body.tag);
+	tags.push(tagInfo);
 })
 
 app.get('/tag', function(req, res) {

@@ -69,21 +69,22 @@ body.input-page{
 }
 
 
-
-
-
 //graffiti wall for output
 body.wall{
 	background-image: url(../img/bg.png);
 	margin: 30px 5%;
+	height: 100vh;
+	
+	p{
+		position: absolute;
+		top: 0;
+		left: 0;
+		font-family: 'Rock Salt', cursive;
+		font-size: 4em;
+		text-shadow: 0 0 10px rgba(0,0,0,0.75); 
+	}
 }
 
-p.tag{
-	position: absolute;
-	font-family: 'Rock Salt', cursive;
-	font-size: 4em;
-	text-shadow: 0 0 10px rgba(0,0,0,0.75); 
-}
 
 
 

@@ -2,30 +2,44 @@
 // upon page load, ask the server for all the tags it has saved, 
 // and put them on the screen
 var body = document.querySelector(".wall")
+var pTag = document.createElement('p');
+
+var randomlyPlace = function(el){
+	el.style.position = "absolute";
+	el.style.top = Math.floor(Math.random()*document.body.clientHeight) + 'px';
+	el.style.left = Math.floor(Math.random()*document.body.clientWidth) + 'px';
+};
+
 
 function displayTag(currentTag){
-	var pTag = document.createElement('p');
-  	pTag.innerHTML = currentTag
-    pTag.classList.add('tag')
-  	body.appendChild(pTag)
+		pTag.innerHTML = currentTag
+		pTag.classList.add('tag')
+		body.appendChild(pTag)
+		randomlyPlace(pTag)
 }
 
+function displayColor(colorSelected){
+	pTag.style.color = colorSelected
+}
+
+//now we'r reaching into the host that is saving our name and color
 axios.get('http://localhost:1235/tag')
-  .then(function (response) {
-  	console.log(response.data)
-  	var tagArray = response.data
-  	for (var i = 0; i < tagArray.length; i++) {
-  		displayTag(tagArray[i])
-  	}
-    // loop through the array
-    // - get tags from api 
-	// - loop through the tags array
-	// - create p tags 
-	// - append them
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
+	.then(function (response) {
+		console.log(response.data)
+		var tagArray = response.data
+		for (var i = 0; i < tagArray.length; i++) {
+			displayTag(tagArray[i].word)
+			displayColor(tagArray[i].color)
+		}
+
+		for (var i = 0; i < Things.length; i++) {
+			Things[i]
+		}
+		}
+	})
+	.catch(function (error) {
+		console.log(error);
+	});
 
 
 
@@ -41,7 +55,7 @@ axios.get('http://localhost:1235/tag')
 
 
 
-  ///SPRAY PAINT CURSOR BY CAMERON LITTLE
+	///SPRAY PAINT CURSOR BY CAMERON LITTLE
 //https://codepen.io/apexskier/pen/BzoYJg
 /**
  * fun javascript doodle that lets you doodle
@@ -50,13 +64,13 @@ axios.get('http://localhost:1235/tag')
 
 // play with these
 var settings = {
-  colorChangeSpeedFactor: .1, // how fast does the color changes? Lower is slower, exponential
-  trailLength: 100, // how long is the trail?
-  diameter: 18, // how wide is the spray mark?
-  fadeStart: .8 // where does the trail start fading out? percentage along itself
+	colorChangeSpeedFactor: .1, // how fast does the color changes? Lower is slower, exponential
+	trailLength: 100, // how long is the trail?
+	diameter: 18, // how wide is the spray mark?
+	fadeStart: .8 // where does the trail start fading out? percentage along itself
 }
 var __meta_settings__ = {
-  disabled: true
+	disabled: true
 }
 
 const cursor = document.getElementById('cursor');
@@ -66,73 +80,73 @@ var cursorTrail = JSON.parse(`[{"hue":311.454399995273,"speed":7.071067811865475
 
 // keep track of where the cursor is
 var cursorPos = {
-  x: -100, // start outside the screen
-  y: -100
+	x: -100, // start outside the screen
+	y: -100
 };
 
 function getPos(event) {
-  return {
-    x: event.pageX,
-    y: event.pageY
-  }
+	return {
+		x: event.pageX,
+		y: event.pageY
+	}
 }
 // can't get the mouse position outside of events, so cache it in the cursorPos object
 document.addEventListener('mousemove', function(e) {
-  cursorPos = getPos(e);
+	cursorPos = getPos(e);
 });
 document.addEventListener('touchmove', function(e) {
-  cursorPos = getPos(e.changedTouches[0]); // no multitouch support (yet? 😜)
-  e.preventDefault(); // prevent touch scrolling
+	cursorPos = getPos(e.changedTouches[0]); // no multitouch support (yet? 😜)
+	e.preventDefault(); // prevent touch scrolling
 });
 
 // "hide" the cursor by moving it off screen
 function goAway(e) {
-  cursorPos.x = -1000;
-  cursorPos.y = -1000;
+	cursorPos.x = -1000;
+	cursorPos.y = -1000;
 }
 document.addEventListener('mouseleave', goAway);
 document.addEventListener('touchend', goAway);
 
 document.addEventListener('click', function(e) {
-  console.log(JSON.stringify(cursorTrail));
+	console.log(JSON.stringify(cursorTrail));
 });
 
 function frame(time) {
-  var hue = (time * settings.colorChangeSpeedFactor) % 360;
-  
-  cursorTrail.push(Object.assign({
-    hue: hue,
-    speed: cursorTrail.length <= 1 ? 0 : ((pos, lastPos) => {
-      // distance between points ~ speed. Might be nice to smooth this by averaging over the last few points
-      return Math.sqrt(Math.pow(lastPos.x - pos.x, 2) + Math.pow(lastPos.y - pos.y, 2));
-    })(cursorPos, cursorTrail[cursorTrail.length - 1])
-  }, cursorPos));
-  
-  // keep popping off the first one
-  // nice little following effect, plus your browser would probably die if everything was kept
-  if (cursorTrail.length > settings.trailLength) {
-    cursorTrail.shift();
-  }
+	var hue = (time * settings.colorChangeSpeedFactor) % 360;
+	
+	cursorTrail.push(Object.assign({
+		hue: hue,
+		speed: cursorTrail.length <= 1 ? 0 : ((pos, lastPos) => {
+			// distance between points ~ speed. Might be nice to smooth this by averaging over the last few points
+			return Math.sqrt(Math.pow(lastPos.x - pos.x, 2) + Math.pow(lastPos.y - pos.y, 2));
+		})(cursorPos, cursorTrail[cursorTrail.length - 1])
+	}, cursorPos));
+	
+	// keep popping off the first one
+	// nice little following effect, plus your browser would probably die if everything was kept
+	if (cursorTrail.length > settings.trailLength) {
+		cursorTrail.shift();
+	}
 
-  // follow the mouse!
-  cursor.style.top = `${cursorPos.y}px`;
-  cursor.style.left = `${cursorPos.x}px`;
-  
-  // make it look like the circle is solid  
-  cursor.style.backgroundColor = `hsl(${hue}, 50%, 50%)`;;
+	// follow the mouse!
+	cursor.style.top = `${cursorPos.y}px`;
+	cursor.style.left = `${cursorPos.x}px`;
+	
+	// make it look like the circle is solid  
+	cursor.style.backgroundColor = `hsl(${hue}, 50%, 50%)`;;
 
-  // generate a trail of shadows
-  cursor.style.boxShadow = cursorTrail.map((pos, i) => {
-    const offsetX = pos.x - cursorPos.x;
-    const offsetY = pos.y - cursorPos.y;
-    const age = (settings.trailLength - i) / settings.trailLength;
-    const fadeOut = age < settings.fadeStart ? 0 : Math.pow(4 * (age - settings.fadeStart), 2); 
-    const color = `hsla(${pos.hue}, 50%, 50%, ${1 - fadeOut})`;
-    // return `${offsetX}px ${offsetY}px ${pos.speed + 1}px ${age * settings.diameter + settings.diameter}px ${color}`;
-    return `${offsetX}px ${offsetY}px ${pos.speed + 1}px ${settings.diameter}px ${color}`;
-  }).reverse().join(', ');
+	// generate a trail of shadows
+	cursor.style.boxShadow = cursorTrail.map((pos, i) => {
+		const offsetX = pos.x - cursorPos.x;
+		const offsetY = pos.y - cursorPos.y;
+		const age = (settings.trailLength - i) / settings.trailLength;
+		const fadeOut = age < settings.fadeStart ? 0 : Math.pow(4 * (age - settings.fadeStart), 2); 
+		const color = `hsla(${pos.hue}, 50%, 50%, ${1 - fadeOut})`;
+		// return `${offsetX}px ${offsetY}px ${pos.speed + 1}px ${age * settings.diameter + settings.diameter}px ${color}`;
+		return `${offsetX}px ${offsetY}px ${pos.speed + 1}px ${settings.diameter}px ${color}`;
+	}).reverse().join(', ');
 
-  window.requestAnimationFrame(frame);
+	window.requestAnimationFrame(frame);
 }
 
 window.requestAnimationFrame(frame);
